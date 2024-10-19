@@ -1,0 +1,12 @@
+import turtle as tt
+
+class Ponto:
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+
+ponto = Ponto(100,50)
+
+tt.goto(ponto.x,ponto.y)
+
+tt.done()
