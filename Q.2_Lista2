@@ -1,0 +1,34 @@
+class Motor:
+    def __init__(self,temperatura,nivel_combustivel,):
+        self.temperatura = temperatura
+        self.nivel_combustivel = nivel_combustivel
+    def status(self):
+        return f"\033[33m -->Status Motor\033[m\nTemperatura: {self.temperatura}.\nNivel de combustivel: {self.nivel_combustivel}."
+
+class Pneu:
+    def __init__(self, pressao,desgaste):
+        self.pressao = pressao
+        self.desgaste = desgaste
+    def status(self):
+        return f"\033[33m -->Status Pneu\033[m\nPressao: {self.pressao}.\nDesgaste: {self.desgaste}."
+
+class Veiculo(Motor,Pneu):
+    def __init__(self,ligado,condicao,temperatura,nivel_combustivel,pressao,desgaste):
+        self.ligado = ligado
+        self.condicao = condicao
+        Motor.__init__(self,temperatura,nivel_combustivel)
+        Pneu.__init__(self,pressao,desgaste)
+
+    def status(self):
+        print("\033[33mStatus do veiculo: \033[m")
+        print('\033[31m-=\033[m' * 20)
+        print(Motor.status(self))  
+        print('\033[31m-=\033[m'*20)
+        print(Pneu.status(self))
+        print('\033[31m-=\033[m' * 20)
+        print(f"Ligado: {self.ligado}.\nDesgaste: {self.condicao}.")
+        print('\033[31m-=\033[m' * 20)
+
+veiculo1 = Veiculo(False,'Boa',34,31,22,'moderado')
+veiculo1.status()
+
