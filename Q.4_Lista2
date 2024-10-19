@@ -1,0 +1,137 @@
+
+from abc import ABC,abstractmethod
+
+class ContaBancaria(ABC):
+    def __init__(self,numeroConta,titular,saldo):
+        self.__numeroConta = numeroConta
+        self.__titular = titular
+        self.__saldo = saldo
+        
+# Getters e setters:
+
+    @property
+    def numeroConta(self):
+        return self.__numeroConta
+    @numeroConta.setter
+    def numeroConta(self,numeroConta):
+        self.__numeroConta = numeroConta
+
+    @property
+    def titular(self):
+        return self.__titular
+    @titular.setter
+    def titular(self, titular):
+        self.__titular = titular
+
+    @property
+    def saldo(self):
+        return self.__saldo
+    @saldo.setter
+    def saldo(self, saldo):
+        self.__saldo = saldo
+
+# Metodos: 
+
+    @abstractmethod
+    def depositar(self):
+        pass 
+
+    @abstractmethod
+    def sacar(self):
+        pass
+
+    @abstractmethod
+    def calcularSaldo(self):
+        pass
+
+class ContaCorrente(ContaBancaria):
+    def __init__(self,numeroConta,titular,saldo):
+        super().__init__(numeroConta,titular,saldo)
+
+    def depositar(self,valor):
+        self.saldo += valor
+        print(f"{valor:.2f} \033[31mdepositados\033[m na conta Corrente")
+        print("-=" * 30)
+
+    def sacar(self,valor):
+        if self.saldo-valor >= -1000:
+            self.saldo -= valor
+            print(f"{valor:.2f} \033[31msacados\033[m na conta Corrente")
+            print("-=" * 30)
+        else:
+            print("Limite de -1000 creditos negativos atingido na conta Corrente, \033[31mnão é possivel sacar\033[m")
+            print("-=" * 30)
+
+
+    def calcularSaldo(self):
+        print(f"\033[33mSaldo atual\033[m: {self.saldo:.2f}")
+        print("-=" * 30)
+    def InforDaConta(self):
+        print("\033[4:33mInformaçoes da conta Corrente\033[m")
+        print(f"\033[34mNumero da conta\033[m: {self.numeroConta}.\n\033[34mTitular\033[m: {self.titular}.\n\033[34mSaldo\033[m: {self.saldo:.2f}")
+        print("-=" * 30)
+
+
+
+
+
+class ContaPoupança(ContaBancaria):
+    def __init__(self, numeroConta, titular, saldo):
+        self.taxa_selic = 10.75 # Pesquisei...é de 10,75%! (para calcular o juros...)
+        super().__init__(numeroConta, titular, saldo)
+    def depositar(self,valor):
+        self.saldo += valor
+        print(f"{valor:.2f} \033[31mdepositados\033[m na conta Poupança (do saldo sem juros)")
+        print("-=" * 30)
+    def sacar(self,valor):
+        if self.saldo-valor >= 0:
+            self.saldo -= valor
+            print(f"{valor:.2f} \033[31msacados\033[m na conta Poupança (do saldo sem juros) ")
+            print("-=" * 30)
+        else:
+            print("\033[31mNão é possivel sacar da Poupança\033[m, saldo será negativo")
+            print("-=" * 30)
+
+    def calcularSaldo(self,mostrar = True): 
+        taxa_juros_mensal = 0.005  # 0,5% ao mês já que a taxa_selic > 8.5 esse ano
+        try:
+            meses = int(input("Quantos \033[33mmeses\033[m você gostaria de simular para calcular os juros da Poupança? "))
+            # Rendimento total ao longo dos meses
+            rendimento_total = self.saldo * taxa_juros_mensal * meses
+            saldoNovo = self.saldo + rendimento_total # SaldoNovo: Saldo com juros
+            if mostrar: 
+                print(f"\033[34mSaldo\033[m: {self.saldo:.2f}")
+                print(f"\033[34mSaldo (calculado com juros sobre o atual)\033[m: {saldoNovo:.2f}")
+                print("-=" * 30)
+            else:
+                return saldoNovo
+
+        except ValueError as e:
+            print("Digite um numero int. Erro: ", e)
+
+    def InforDaConta(self):
+        saldoNovo = self.calcularSaldo(mostrar = False)
+        print("\033[4:33mInformaçoes da conta Poupança\033[m")
+        print(f"\033[34mNumero da conta\033[m: {self.numeroConta}.\n\033[34mTitular\033[m: {self.titular}.\n\033[34mSaldo\033[m: {self.saldo:.2f}.\n\033[34mSaldo (calculado com juros sobre o atual)\033[m: {saldoNovo:.2f}.")
+        print("-=" * 30)
+
+
+# TESTANDO....
+
+contaCorrente1 = ContaCorrente("00234-6", "Mariana Lima", 100)
+contaPoupança1 = ContaPoupança("00124-5", "Carlos Souza", 2500)
+
+# Conta Corrente
+contaCorrente1.InforDaConta()
+contaCorrente1.sacar(1101)
+contaCorrente1.sacar(200)
+contaCorrente1.depositar(300)
+contaCorrente1.calcularSaldo()
+contaCorrente1.InforDaConta()
+
+# Conta Poupança
+  # Lembrando que o sacar e depositar sao feitos no saldo sem o juros, depois que precisa calcularSaldo para adicionar o juros..
+contaPoupança1.InforDaConta()
+contaPoupança1.depositar(100)
+contaPoupança1.sacar(2601)
+contaPoupança1.calcularSaldo()
