@@ -1,0 +1,51 @@
+import turtle as tt
+
+class Forma:
+    def desenhar(self):  # Desenhando uma figura qualquer: um Losango
+        tt.right(30)
+        tt.forward(100)
+        tt.right(120)
+        tt.forward(100)
+        tt.right(60)
+        tt.forward(100)
+        tt.right(120)
+        tt.forward(100)
+        tt.done()
+class Circulo(Forma):
+    def __init__(self,raio):
+        self.raio = raio
+    def desenhar(self):
+        tt.penup()
+        tt.goto(0, 70)
+        tt.pendown()
+        tt.circle(self.raio)
+
+
+class Quadrado(Forma):
+    def __init__(self,lado):
+        self.lado = lado
+    def desenhar(self):
+        tt.penup()
+        tt.goto(-50, -50)
+        tt.pendown()
+        for i in range(0,4):
+            tt.forward(self.lado)
+            tt.right(90)
+
+
+tt.speed(5)
+
+# Desenhando o circulo
+circulo = Circulo(80)
+circulo.desenhar()
+
+# Desenhando o quadrado
+quadrado = Quadrado(100)
+quadrado.desenhar()
+
+tt.done()
+
+# Desenhando uma forma qualquer: (Colocar separados dos outros "desenhar" para mostrar)
+#forma = Forma()
+#forma.desenhar()
+
